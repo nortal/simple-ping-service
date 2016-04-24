@@ -1,0 +1,23 @@
+ping.module.client.url=https://localhost/client/ext/public/ping
+ping.module.client.name=CLIENT
+check.module.cas.url=https://localhost/cas/login
+check.module.cas.name=CAS
+
+# Mail server settings
+mail.server.host=smtp.example.com
+mail.server.port=25
+mail.from.address=noreply@example.com
+
+# Send notification to:
+mail.to.address=user.1@example.com,user.2@example.com
+mail.subject.prefix=[Module check]
+# If true then send compact report else send separate report for every module
+mail.send.compact.report=true
+
+# Checking parameters
+request.connect-timeout=6000
+request.read-timeout=5000
+
+# Ping service output files locations
+report.location=\tmp\ping-report.html
+json.location=\tmp\ping-report.json

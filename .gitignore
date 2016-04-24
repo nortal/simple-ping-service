@@ -1,0 +1,8 @@
+/ping.properties
+/ping.log
+/statuses.properties
+/build/
+/target/
+/.settings
+*.classpath
+*.pmd
