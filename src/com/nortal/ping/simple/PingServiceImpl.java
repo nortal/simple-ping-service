@@ -237,6 +237,11 @@ public class PingServiceImpl implements PingService {
         if (ping) {
             String output = out.toString();
             if (output.contains("moodul") && output.contains("aeg")) {
+                // EST
+                isOk = true;
+            }
+            if (output.contains("module") && output.contains("time")) {
+                // ENG
                 isOk = true;
             }
         } else {

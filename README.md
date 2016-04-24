@@ -10,11 +10,11 @@ Configuration keys:
 - ping.module.X.url = request URL for check
 - ping.module.X.name = module name for report
  
-The JSON for REST ping service must contain two attributes **aeg** and **moodul**:
+The JSON for REST ping service must contain two attributes **time** and **module**:
 
 	{
-	  "aeg": "2015-09-14T14:43:13.262+03:00",
-	  "moodul": "pms_klient"
+	  "time": "2015-09-14T14:43:13.262+03:00",
+	  "module": "client"
 	}
 
 ## Simple URL check service
