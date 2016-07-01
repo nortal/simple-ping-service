@@ -67,7 +67,7 @@ public class PingReport {
 
             String rowColor = "";
             boolean isError = "ERROR".equals(report.getStatus());
-			if (isError) {
+	    if (isError) {
                 rowColor = " bgcolor=\"darkred\"";
             } else {
                 rowColor = " bgcolor=\"white\"";
