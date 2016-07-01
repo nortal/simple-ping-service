@@ -49,6 +49,7 @@ public class PingReport {
         builder.append("<head>");
         builder.append("<title>Raport</title>");
         builder.append("<meta http-equiv=\"refresh\" content=\"10\">");
+        builder.append("<meta http-equiv=\"cache-control\" content=\"no-cache\">");
         builder.append("</head>");
         builder.append("<body>");
         builder.append("<table border='1' cellspacing='0'>");
@@ -64,14 +65,22 @@ public class PingReport {
 
         for (Report report : reportList) {
 
-            String color = "";
-            if ("ERROR".equals(report.getStatus())) {
-                color = " color=\"red\"";
-            } else if ("unknown".equals(report.getStatus())) {
-                color = " color=\"gray\"";
+            String rowColor = "";
+            boolean isError = "ERROR".equals(report.getStatus());
+			if (isError) {
+                rowColor = " bgcolor=\"darkred\"";
+            } else {
+                rowColor = " bgcolor=\"white\"";
             }
+			
+			String color = "";
+			if (isError) {
+				color = " color=\"white\"";
+			} else {
+				color = " color=\"black\"";
+			}
             
-            builder.append("<tr>");
+            builder.append("<tr").append(rowColor).append(">");
             builder.append("<td><font").append(color).append(">").append(report.getModule()).append("</font></td>");
             builder.append("<td><font").append(color).append(">").append(report.getStatus()).append("</font></td>");
             builder.append("<td><font").append(color).append(">").append(report.getChecked()).append("</font></td>");
