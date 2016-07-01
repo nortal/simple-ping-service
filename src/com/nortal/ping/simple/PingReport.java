@@ -73,12 +73,12 @@ public class PingReport {
                 rowColor = " bgcolor=\"white\"";
             }
 			
-			String color = "";
-			if (isError) {
-				color = " color=\"white\"";
-			} else {
-				color = " color=\"black\"";
-			}
+	    String color = "";
+	    if (isError) {
+	    	color = " color=\"white\"";
+	    } else {
+		color = " color=\"black\"";
+	    }
             
             builder.append("<tr").append(rowColor).append(">");
             builder.append("<td><font").append(color).append(">").append(report.getModule()).append("</font></td>");
