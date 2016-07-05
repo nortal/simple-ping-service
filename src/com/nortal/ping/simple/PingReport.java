@@ -67,19 +67,19 @@ public class PingReport {
 
             String rowColor = "";
             boolean isError = "ERROR".equals(report.getStatus());
-	    if (isError) {
+            if (isError) {
                 rowColor = " bgcolor=\"darkred\"";
             } else {
                 rowColor = " bgcolor=\"white\"";
             }
-			
-	    String color = "";
-	    if (isError) {
-	    	color = " color=\"white\"";
-	    } else {
-		color = " color=\"black\"";
-	    }
-            
+
+            String color = "";
+            if (isError) {
+                color = " color=\"white\"";
+            } else {
+                color = " color=\"black\"";
+            }
+
             builder.append("<tr").append(rowColor).append(">");
             builder.append("<td><font").append(color).append(">").append(report.getModule()).append("</font></td>");
             builder.append("<td><font").append(color).append(">").append(report.getStatus()).append("</font></td>");
@@ -87,7 +87,7 @@ public class PingReport {
             builder.append("<td><font").append(color).append(">").append(report.getLastResponded()).append("</font></td>");
             builder.append("</tr>");
 
-            builder.append("<tr><td>&nbsp;</td><td><font color=\"gray\">URL:</font></td>");
+            builder.append("<tr><td><font color=\"gray\">URL:</font></td>");
             builder.append("<td colspan=\"3\"><font color=\"gray\">").append(report.getUrl()).append("</font></td></tr>");
         }
 
