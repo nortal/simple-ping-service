@@ -20,5 +20,7 @@ request.read-timeout=5000
 
 # Ping service output files locations
 report.location=\tmp\ping-report.html
-report.with.audio.script=false
+report.with.audio=false
+report.with.audio.sound.error=error.wav
+report.with.audio.sound.return=return.wav
 json.location=\tmp\ping-report.json

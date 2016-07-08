@@ -18,7 +18,7 @@ public class PingMail {
     private final String fromAadress;
     private final String[] toAddresses;
     private final String subjectPrefix;
-
+    
     public PingMail(String hostName, int smtpPort, String fromAadress, String[] toAddresses, String subjectPrefix) {
         super();
         this.hostName = hostName;

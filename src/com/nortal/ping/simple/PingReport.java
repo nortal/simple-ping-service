@@ -25,6 +25,9 @@ public class PingReport {
 
     private Properties properties = new Properties();
     private Properties statuses = new Properties();
+    private boolean reportWithAudio;
+    private String reportWithAudioSoundError;
+    private String reportWithAudioSoundReturn;
 
     public PingReport() throws FileNotFoundException, IOException {
         File pingPropertiesFile = new File(PingService.PING_FILE);
@@ -34,9 +37,13 @@ public class PingReport {
             System.exit(0);
         }
         properties.load(new FileReader(pingPropertiesFile));
+
+        reportWithAudio = Boolean.valueOf(properties.getProperty("report.with.audio", "false"));
+        reportWithAudioSoundError = properties.getProperty("report.with.audio.sound.error", "error.wav");
+        reportWithAudioSoundReturn = properties.getProperty("report.with.audio.sound.return", "return.wav");
     }
 
-    public StringBuilder createReport() throws FileNotFoundException, IOException {
+    public StringBuilder createReport(boolean withAudioScript) throws FileNotFoundException, IOException {
         return this.createReport(this.collect());
     }
 
@@ -52,7 +59,7 @@ public class PingReport {
         builder.append("<meta http-equiv=\"cache-control\" content=\"no-cache\">");
         builder.append("</head>");
         builder.append("<body>");
-        builder.append("<table border='1' cellspacing='0'>");
+        builder.append("<table border='1' cellspacing='0' id='table'>");
 
         builder.append("<thead><tr>");
         builder.append("<th>Module</th>");
@@ -93,6 +100,30 @@ public class PingReport {
 
         builder.append("</tbody>");
         builder.append("</table>");
+
+        if (this.reportWithAudio) {
+            builder.append("<script type='text/javascript'>");
+            builder.append("var source = window.document.getElementById('source');");
+            builder.append("var error = table && table.innerHTML.indexOf('ERROR') != -1;");
+
+            builder.append("if(!sessionStorage.hasError){");
+            builder.append("sessionStorage.hasError = 0;");
+            builder.append("}");
+
+            builder.append("if(error && sessionStorage.hasError && sessionStorage.hasError !== '1'){");
+            builder.append("sessionStorage.hasError = '1';");
+            builder.append("var audio = new Audio('").append(this.reportWithAudioSoundError).append("');");
+            builder.append("audio.play();");
+            builder.append("}");
+
+            builder.append("if(!error && sessionStorage.hasError && sessionStorage.hasError !== '0'){");
+            builder.append("sessionStorage.hasError = '0';");
+            builder.append("var audio = new Audio('").append(this.reportWithAudioSoundReturn).append("');");
+            builder.append("audio.play();");
+            builder.append("}");
+            builder.append("</script>");
+        }
+
         builder.append("</body>");
         builder.append("</html>");
         return builder;

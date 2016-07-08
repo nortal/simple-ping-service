@@ -86,6 +86,8 @@ public class PingServiceImpl implements PingService {
                              properties.getProperty("mail.from.address"),
                              properties.getProperty("mail.to.address").split(","),
                              properties.getProperty("mail.subject.prefix"));
+
+
     }
 
     @Override
@@ -121,7 +123,7 @@ public class PingServiceImpl implements PingService {
         if (pingStatusChanged && sendCompactReport) {
             try {
                 String modules = statusChangedModules.toString().replaceAll("\\[|\\]", "");
-                pingMail.send("Status changed: " + modules, pingReport.createReport().toString());
+                pingMail.send("Status changed: " + modules, pingReport.createReport(false).toString());
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, "Error on sending email.", ex);
             }
