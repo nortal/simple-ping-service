@@ -28,6 +28,7 @@ public class PingReport {
     private boolean reportWithAudio;
     private String reportWithAudioSoundError;
     private String reportWithAudioSoundReturn;
+    private boolean reportShowExaminedAddress;
 
     public PingReport() throws FileNotFoundException, IOException {
         File pingPropertiesFile = new File(PingService.PING_FILE);
@@ -39,6 +40,7 @@ public class PingReport {
         properties.load(new FileReader(pingPropertiesFile));
 
         reportWithAudio = Boolean.valueOf(properties.getProperty("report.with.audio", "false"));
+        reportShowExaminedAddress = Boolean.valueOf(properties.getProperty("report.show.examined.address", "true"));
         reportWithAudioSoundError = properties.getProperty("report.with.audio.sound.error", "error.wav");
         reportWithAudioSoundReturn = properties.getProperty("report.with.audio.sound.return", "return.wav");
     }
@@ -94,8 +96,10 @@ public class PingReport {
             builder.append("<td><font").append(color).append(">").append(report.getLastResponded()).append("</font></td>");
             builder.append("</tr>");
 
-            builder.append("<tr><td><font color=\"gray\">URL:</font></td>");
-            builder.append("<td colspan=\"3\"><font color=\"gray\">").append(report.getUrl()).append("</font></td></tr>");
+            if (reportShowExaminedAddress) {
+                builder.append("<tr><td><font color=\"gray\">URL:</font></td>");
+                builder.append("<td colspan=\"3\"><font color=\"gray\">").append(report.getUrl()).append("</font></td></tr>");
+            }
         }
 
         builder.append("</tbody>");
