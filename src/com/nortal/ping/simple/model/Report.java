@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Margus Hanni <margus.hanni@nortal.com>
  */
-public class Report implements Serializable {
+public class Report implements Serializable, Comparable<Report> {
 
     private static final long serialVersionUID = 1L;
 
@@ -53,6 +53,14 @@ public class Report implements Serializable {
 
     public void setLastResponded(String lastResponded) {
         this.lastResponded = lastResponded;
+    }
+
+    @Override
+    public int compareTo(Report o) {
+        if (o == null || this.getModule() == null || o.getModule() == null) {
+            return -1;
+        }
+        return this.getModule().compareTo(o.getModule());
     }
 
 }
