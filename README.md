@@ -1,5 +1,5 @@
 # simple-ping-service
-Simple JAVA based ping service. Checks if web application is allived. Result is a HTML page. Can configured for sending notification via email when some web application status changed.
+Simple JAVA based ping service. Checks if web application is alive. Result is a HTML page. Can configured for sending notification via email when some web application status changed.
 
 ## Configuration 
 See property sample file **ping.properties.sample**. Create your own file with name **ping.properties**
