@@ -8,7 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,7 +95,9 @@ public class PingReport {
 
             builder.append("<tr").append(rowColor).append(">");
             builder.append("<td><font").append(color).append(">").append(report.getModule()).append("</font></td>");
-            builder.append("<td><font").append(color).append(">").append(report.getStatus()).append("</font></td>");
+            builder.append("<td><font").append(color).append(">").append(report.getStatus())
+                    .append(report.getStatusDetail().isEmpty() ? "" : " (" + report.getStatusDetail() + ") ")
+                    .append("</font></td>");
             builder.append("<td><font").append(color).append(">").append(report.getChecked()).append("</font></td>");
             builder.append("<td><font").append(color).append(">").append(report.getLastResponded()).append("</font></td>");
             builder.append("</tr>");
@@ -148,7 +153,38 @@ public class PingReport {
         }
     }
 
-    private List<Report> collect() throws FileNotFoundException, IOException {
+    public void createStatistics(List<Report> lastReportList) throws IOException {
+        List<Report> reportList = this.collect();
+        if (lastReportList == null || lastReportList.isEmpty()) {
+            return;
+        }
+        File statDir = new File("statistics");
+        statDir.mkdir();
+        Map<String, Report> moduleToLastReport = createMap(lastReportList);
+        for (Report report : reportList) {
+            Report lastReport = moduleToLastReport.get(report.getModule());
+            if (lastReport == null || Objects.equals(lastReport.getStatus(), report.getStatus())) {
+                continue;
+            }
+            File moduleStat = new File(statDir, report.getModule().trim() + ".statlog");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(moduleStat, true))) {
+                writer.write(String.join(" ", report.getModule(), report.getStatus(), report.getStatusDetail(), report.getLastResponded(),
+                                         report.getChecked()));
+                writer.write("\n");
+                writer.flush();
+            }
+        }
+    }
+
+    private Map<String, Report> createMap(List<Report> lastReportList) {
+        Map<String, Report> moduleToLastReport = new HashMap<>();
+        for (Report report : lastReportList) {
+            moduleToLastReport.put(report.getModule(), report);
+        }
+        return moduleToLastReport;
+    }
+
+    public List<Report> collect() throws FileNotFoundException, IOException {
         List<Report> reportList = new ArrayList<Report>();
 
         File statusFile = new File(PingService.STATUS_FILE);
@@ -169,6 +205,7 @@ public class PingReport {
             report.setModule(properties.getProperty(k));
 
             report.setStatus(statuses.getProperty(statusKey + ".url.status", "unknown"));
+            report.setStatusDetail(statuses.getProperty(statusKey + ".url.status-detail", "unknown"));
             report.setChecked(statuses.getProperty(statusKey + ".url.checked", "unknown"));
             report.setLastResponded(statuses.getProperty(statusKey + ".url.lastResponded", "unknown"));
             report.setUrl(properties.getProperty(statusKey + ".url"));
