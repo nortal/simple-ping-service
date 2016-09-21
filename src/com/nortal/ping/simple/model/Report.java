@@ -11,6 +11,7 @@ public class Report implements Serializable, Comparable<Report> {
 
     private String module;
     private String status;
+    private String statusDetail;
     private String url;
     private String checked;
     private String lastResponded;
@@ -29,6 +30,14 @@ public class Report implements Serializable, Comparable<Report> {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatusDetail() {
+        return statusDetail;
+    }
+
+    public void setStatusDetail(String statusDetail) {
+        this.statusDetail = statusDetail;
     }
 
     public String getUrl() {
@@ -62,5 +71,4 @@ public class Report implements Serializable, Comparable<Report> {
         }
         return this.getModule().compareTo(o.getModule());
     }
-
 }

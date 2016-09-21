@@ -17,6 +17,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -29,6 +30,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import com.nortal.ping.simple.model.Report;
+
 /**
  * @author Margus Hanni <margus.hanni@nortal.com>
  */
@@ -40,6 +43,7 @@ public class PingServiceImpl implements PingService {
 
     private static final String STATUS_OK = "OK";
     private static final String STATUS_ERROR = "ERROR";
+    private static final String TIMEOUT = "TIMEOUT";
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     private final Properties properties = new Properties();
@@ -87,7 +91,6 @@ public class PingServiceImpl implements PingService {
                              properties.getProperty("mail.to.address").split(","),
                              properties.getProperty("mail.subject.prefix"));
 
-
     }
 
     @Override
@@ -114,8 +117,10 @@ public class PingServiceImpl implements PingService {
         }
 
         try {
+            List<Report> previous = pingReport.collect();
             this.saveStatuses();
             pingReport.createAndSaveReport();
+            pingReport.createStatistics(previous);
         } catch (IOException ex) {
             LOGGER.log(Level.SEVERE, "Cannot save status", ex);
         }
@@ -150,6 +155,7 @@ public class PingServiceImpl implements PingService {
         statuses.setProperty(code + ".checked", cheked);
 
         String statusKey = code + ".status";
+        String statusDetailKey = code + ".status-detail";
 
         String lastRespondedKey = code + ".lastResponded";
 
@@ -188,7 +194,10 @@ public class PingServiceImpl implements PingService {
                 // teenus on siiski üleval
                 isOk = true;
             }
+
+            statuses.setProperty(statusDetailKey, isOk ? "" : String.valueOf(responseCode));
         } catch (Exception ex) {
+            statuses.setProperty(statusDetailKey, TIMEOUT);
             messageWiter.append("Request connection timeout: ").append(String.valueOf(requestConnectionTimeout)).append(LINE_SEPARATOR);
             messageWiter.append("Request read timeout: ").append(String.valueOf(requestReadTimeout)).append(LINE_SEPARATOR);
             ex.printStackTrace(new PrintWriter(messageWiter));
